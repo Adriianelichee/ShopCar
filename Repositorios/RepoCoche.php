@@ -1,5 +1,12 @@
 <?php
-Class RepoCoche implements RepoCRUD{
+
+$dr = $_SERVER["DOCUMENT_ROOT"];
+
+
+require_once "$dr/Repositorios/RepoCRUD.php";
+
+
+Class RepoCoche implements RepoCrud{
     private $conexion;
 
     public function __construct($conexion){

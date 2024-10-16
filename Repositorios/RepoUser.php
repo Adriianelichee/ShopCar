@@ -7,16 +7,15 @@ class RepoUser implements RepoCRUD{
 
     private $conexion;
 
-    public function __construct(){
+    public function __construct($conexion){
+        $this->conexion = $conexion;
     }
     //METODOS CRUD
     public function create($user){
-        $this->conexion = Conexion::getConection();
         $username = $user->getUsername();
         $password = $user->getPassword();
         $stmt = $this->conexion->prepare("SELECT * FROM users WHERE user = :user");
-        $stmt->bindParam(":user", $username,PDO::PARAM_STR);
-        $stmt->execute();
+        $stmt->execute(["user" => $username]);
         
         if($stmt->rowCount() > 0){
             return false;
@@ -24,9 +23,7 @@ class RepoUser implements RepoCRUD{
         } else {
             $stmt = $this->conexion->prepare("INSERT INTO users (user, password) VALUES (:user, :password)");
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt->bindParam(":user", $username);
-            $stmt->bindParam(":password", $hashedPassword);
-            return $stmt->execute();
+            return $stmt->execute(["user" => $username, "password" => $hashedPassword]);
        }
     }
     
@@ -37,16 +34,14 @@ class RepoUser implements RepoCRUD{
     public function delete($id){
     }
     public function getById($username){        
-        $this->conexion = Conexion::getConection();
         $stmt = $this->conexion->prepare("SELECT * FROM users WHERE user = :user");
-        $stmt->bindParam(":user", $username);
-        $stmt->execute();
+        $stmt->execute(["user" => $username]);
     
         if ($stmt->rowCount() > 0) {
             $fila = $stmt->fetch(PDO::FETCH_ASSOC);
             return new User($fila['user'], $fila['password']);
         } else {
-            return null; // Return null if no user is found
+            return null; 
         }
     }
     

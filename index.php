@@ -2,15 +2,15 @@
 $dr = $_SERVER["DOCUMENT_ROOT"];
 
 
-include_once "$dr/Repositorios/RepoUser.php";
-include_once "$dr/modelo/User.php";
-include_once "$dr/Repositorios/Conexion.php";
+require_once "$dr/Repositorios/RepoUser.php";
+require_once "$dr/modelo/User.php";
+require_once "$dr/Repositorios/Conexion.php";
 
 
  $username = $_POST["user"];
  $contraseña = $_POST["contra"];
-
- $repoUser = new RepoUser();
+ $conexion = Conexion::getConection();
+ $repoUser = new RepoUser($conexion);
 
 //  $user = new User($username, $contraseña);
 
@@ -20,14 +20,6 @@ include_once "$dr/Repositorios/Conexion.php";
 //      echo "Error al crear el usuario";
 //  }
 $user = $repoUser->getById($username);
+var_dump($user);
 
 
-if ($user) {
-    if (password_verify($contraseña, $user->getPassword())) {
-        header("Location: Control/listamarcas.php");
-    } else {
-        echo "Contraseña incorrecta";
-    }
-} else {
-    echo "El usuario no existe";
-}

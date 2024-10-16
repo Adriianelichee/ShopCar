@@ -12,7 +12,8 @@ include_once "$dr/Modelo/Marca.php";
 class RepoMarca implements RepoCRUD{
     private $conexion;
 
-    public function __construct(){
+    public function __construct($conexion){
+        $this->conexion = $conexion;
     }
     //METODOS CRUD
     public function create($marca){
